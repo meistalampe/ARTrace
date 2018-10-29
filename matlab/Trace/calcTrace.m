@@ -2,7 +2,7 @@
 function [xq,yq,zq,pq_control,tSize] = calcTrace(pos_s,pos_t,pos_r)
 
 %% time definition
-t = 0:.01:1;
+t = 0:.05:1;
 tSize = length(t);
 %% quadratic beziér
 % basis functions

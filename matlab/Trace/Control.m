@@ -61,11 +61,35 @@ pos_ref = [0 5 0]; % will be calculated according to start and goal position and
  
 %% Trace Transmission
 % transmit trace to Unity
+% x = 122 ,y = 123 , z=124
+% prepare x coordinates
 
-
-xdata = [tSize,x_trace,y_trace,z_trace];
+dataLabel = str2num('122');
+xdata = [dataLabel,tSize,x_trace];
+xdata_str = num2str(xdata);
+% xdata_send = strcat(dataLabel, xdata_str);
 
 fopen(tcpipClient);
-fwrite(tcpipClient,xdata);
+fwrite(tcpipClient,xdata_str);
+fclose(tcpipClient); 
+
+% prepare y coordinates
+dataLabel = str2num('123');
+ydata = [dataLabel,tSize,y_trace];
+ydata_str = num2str(ydata);
+% ydata_send = strcat(dataLabel, ydata_str);
+
+fopen(tcpipClient);
+fwrite(tcpipClient,ydata_str);
+fclose(tcpipClient);
+
+% prepare x coordinates
+dataLabel = str2num('124');
+zdata = [dataLabel,tSize,z_trace];
+zdata_str = num2str(zdata);
+% zdata_send = strcat(dataLabel, zdata_str);
+
+fopen(tcpipClient);
+fwrite(tcpipClient,zdata_str);
 fclose(tcpipClient);
  

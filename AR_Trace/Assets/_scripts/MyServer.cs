@@ -23,6 +23,7 @@ public class MyServer : MonoBehaviour {
     public byte[] data = new byte[READ_BUFFER_SIZE];
     String strBytesRead;
     String message;
+    Int32 label;
 
     public int cSize;
     public float[] xValues;
@@ -57,23 +58,66 @@ public class MyServer : MonoBehaviour {
             stream = client.GetStream();
             reader = new StreamReader(stream);
             message = reader.ReadToEnd();
+            //Debug.Log(message);
 
-            data = System.Text.Encoding.UTF8.GetBytes(message);
-            Debug.Log(BitConverter.ToString(data)); 
+            data = System.Text.Encoding.ASCII.GetBytes(message);
 
-            cSize = Convert.ToInt32(data[0]);
-            
+            label = Convert.ToInt32(data[0]);
+            cSize = Convert.ToInt32(data[1]);
+
             xValues = new float[cSize];
             yValues = new float[cSize];
             zValues = new float[cSize];
 
-            for(int i=0 ; i<cSize ; i++)
+            switch (label)
             {
-                // switched z and y 
-                xValues[i] = Convert.ToSingle(data[i + 1]);
-                zValues[i] = Convert.ToSingle(data[i + cSize + 1]);
-                yValues[i] = Convert.ToSingle(data[i + 2*cSize + 1]);
+                case 122:
+                    Debug.Log("xValues: " + message);
+                    //data = System.Text.Encoding.UTF32.GetBytes(message);
+                    
+                    for (int i = 0; i < cSize; i++)
+                    {
+                        xValues[i] = Convert.ToSingle(data[i + 2]);                       
+                    }                      
+                    break;
+                case 123:
+                    Debug.Log("yValues: " + message);
+                    //data = System.Text.Encoding.UTF32.GetBytes(message);
+
+                    for (int i = 0; i < cSize; i++)
+                    {
+                        yValues[i] = Convert.ToSingle(data[i + 2]);
+                    }
+                    break;
+                case 124:
+                    Debug.Log("zValues: " + message);
+                    //data = System.Text.Encoding.UTF32.GetBytes(message);
+
+                    for (int i = 0; i < cSize; i++)
+                    {
+                        zValues[i] = Convert.ToSingle(data[i + 2]); ;
+                    }
+                    break;
+
             }
+
+            //data = System.Text.Encoding.UTF8.GetBytes(message);
+            //Debug.Log(BitConverter.ToString(data)); 
+
+            //cSize = Convert.ToInt32(data[0]);
+            
+            
+            //xValues = new float[cSize];
+            //yValues = new float[cSize];
+            //zValues = new float[cSize];
+
+            //for(int i=0 ; i<cSize ; i++)
+            //{
+            //    // switched z and y 
+            //    xValues[i] = Convert.ToSingle(data[i + 1]);
+            //    zValues[i] = Convert.ToSingle(data[i + cSize + 1]);
+            //    yValues[i] = Convert.ToSingle(data[i + 2*cSize + 1]);
+            //}
 
         }
 
