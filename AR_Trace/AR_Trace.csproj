@@ -86,6 +86,7 @@
     <Compile Include="Assets\_scripts\MyClient.cs" />
     <Compile Include="Assets\_scripts\MyServer.cs" />
     <Compile Include="Assets\_scripts\Spawner.cs" />
+    <Compile Include="Assets\_scripts\TestServer.cs" />
     <Compile Include="Assets\_scripts\Trace.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/_scenes/spawn_destroy.unity
+- path: Assets/_scenes/TestScene.unity
   isLoaded: 1
   isActive: 1

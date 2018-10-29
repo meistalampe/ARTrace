@@ -20,41 +20,36 @@ set(tcpipClient,'Timeout',30);
 %% Input
 
 % input prompts
-prompt_input = 'Input target position [x y z] and confirm pressing [Enter].\n';
-prompt_fail = 'Invalid input please try again. \n';
+% prompt_input = 'Input target position [x y z] and confirm pressing [Enter].\n';
+% prompt_fail = 'Invalid input please try again. \n';
 
 % input verification
-valid_input = false;
-
-while valid_input == false
-    fprintf('TRACE CONTROL PROGRAM \n' );
-    fprintf('******************** \n');
-    inp_pos = input(prompt_input); 
-    % find a way to int check            
-        if(length(inp_pos) == 3) 
-            valid_input = true;               
-            fprintf('Valid Input. Calculating trace...\n');                                        
-        else
-            valid_input = false;
-            fprintf('Invalid input. Please try again. \n');
-        end
-end
+% valid_input = false;
+% 
+% while valid_input == false
+%     fprintf('TRACE CONTROL PROGRAM \n' );
+%     fprintf('******************** \n');
+%     inp_pos = input(prompt_input); 
+%     % find a way to int check            
+%         if(length(inp_pos) == 3) 
+%             valid_input = true;               
+%             fprintf('Valid Input. Calculating trace...\n');                                        
+%         else
+%             valid_input = false;
+%             fprintf('Invalid input. Please try again. \n');
+%         end
+% end
 %% Trace Calculation
- 
+
 % define target position coordinates
-pos_target = inp_pos;
-%  x_target = pos_target(1);
-%  y_target = pos_target(2);
-%  z_target = pos_target(3);
- 
+% pos_target = inp_pos;
+pos_target = [3 2 1];
+
 % define start position coordinates
 pos_start = [0 0 0]; % will be automatic input from robot in the future
-%  x_start = pos_start(1);
-%  y_start = pos_start(2);
-%  z_start = pos_start(3);
  
 % define reference point coordinates
-pos_ref = [0 5 0]; % will be calculated according to start and goal position and ideally live on the unit circle
+pos_ref = [1 1 1]; % will be calculated according to start and goal position and ideally live on the unit circle
  
 % calculate an plot trace
 [x_trace,y_trace,z_trace,points,tSize] = calcTrace(pos_start,pos_target,pos_ref);
@@ -62,34 +57,51 @@ pos_ref = [0 5 0]; % will be calculated according to start and goal position and
 %% Trace Transmission
 % transmit trace to Unity
 % x = 122 ,y = 123 , z=124
+formatSpec = '%4.2f';
 % prepare x coordinates
+x_data = [tSize x_trace];
+x_data_str = 'xData|';
+sepSign = '|';
 
-dataLabel = str2num('122');
-xdata = [dataLabel,tSize,x_trace];
-xdata_str = num2str(xdata);
-% xdata_send = strcat(dataLabel, xdata_str);
+for i= 1:tSize
+str = num2str(x_data(i));
+% str = num2str(x_data(i),formatSpec);
+x_data_str = strcat(x_data_str,str);
+x_data_str = strcat(x_data_str,sepSign);
+end
 
 fopen(tcpipClient);
-fwrite(tcpipClient,xdata_str);
+fwrite(tcpipClient,x_data_str);
 fclose(tcpipClient); 
 
 % prepare y coordinates
-dataLabel = str2num('123');
-ydata = [dataLabel,tSize,y_trace];
-ydata_str = num2str(ydata);
-% ydata_send = strcat(dataLabel, ydata_str);
+y_data = [tSize y_trace];
+y_data_str = 'yData|';
+sepSign = '|';
+
+for i= 1:tSize
+str = num2str(y_data(i));
+y_data_str = strcat(y_data_str,str);
+y_data_str = strcat(y_data_str,sepSign);
+end
 
 fopen(tcpipClient);
-fwrite(tcpipClient,ydata_str);
-fclose(tcpipClient);
+fwrite(tcpipClient,y_data_str);
+fclose(tcpipClient); 
 
-% prepare x coordinates
-dataLabel = str2num('124');
-zdata = [dataLabel,tSize,z_trace];
-zdata_str = num2str(zdata);
-% zdata_send = strcat(dataLabel, zdata_str);
+% prepare z coordinates
+z_data = [tSize z_trace];
+z_data_str = 'zData|';
+sepSign = '|';
+
+for i= 1:tSize
+str = num2str(z_data(i),formatSpec);
+z_data_str = strcat(z_data_str,str);
+z_data_str = strcat(z_data_str,sepSign);
+end
 
 fopen(tcpipClient);
-fwrite(tcpipClient,zdata_str);
-fclose(tcpipClient);
+fwrite(tcpipClient,z_data_str);
+fclose(tcpipClient); 
+
  
