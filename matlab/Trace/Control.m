@@ -20,30 +20,30 @@ set(tcpipClient,'Timeout',30);
 %% Input
 
 % input prompts
-% prompt_input = 'Input target position [x y z] and confirm pressing [Enter].\n';
-% prompt_fail = 'Invalid input please try again. \n';
+prompt_input = 'Input target position [x y z] and confirm pressing [Enter].\n';
+prompt_fail = 'Invalid input please try again. \n';
 
-% input verification
-% valid_input = false;
-% 
-% while valid_input == false
-%     fprintf('TRACE CONTROL PROGRAM \n' );
-%     fprintf('******************** \n');
-%     inp_pos = input(prompt_input); 
-%     % find a way to int check            
-%         if(length(inp_pos) == 3) 
-%             valid_input = true;               
-%             fprintf('Valid Input. Calculating trace...\n');                                        
-%         else
-%             valid_input = false;
-%             fprintf('Invalid input. Please try again. \n');
-%         end
-% end
+input verification
+valid_input = false;
+
+while valid_input == false
+    fprintf('TRACE CONTROL PROGRAM \n' );
+    fprintf('******************** \n');
+    inp_pos = input(prompt_input); 
+    % find a way to int check            
+        if(length(inp_pos) == 3) 
+            valid_input = true;               
+            fprintf('Valid Input. Calculating trace...\n');                                        
+        else
+            valid_input = false;
+            fprintf('Invalid input. Please try again. \n');
+        end
+end
 %% Trace Calculation
 
 % define target position coordinates
-% pos_target = inp_pos;
-pos_target = [3 2 1];
+pos_target = inp_pos;
+% pos_target = [3 2 1];
 
 % define start position coordinates
 pos_start = [0 0 0]; % will be automatic input from robot in the future
