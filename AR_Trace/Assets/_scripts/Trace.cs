@@ -19,12 +19,12 @@ public class Trace : MonoBehaviour {
     public float trace_resolution = 10f;   // estimated length of the trace
     private float step;
 
-    public GameObject scriptObject; MyServer getData;
+    public GameObject scriptObject; TestServer getData;
 
     // instantiating
     void Awake()
     {
-        getData = scriptObject.GetComponent<MyServer>();
+        getData = scriptObject.GetComponent<TestServer>();
 
         //step = 1f / trace_resolution;
         //markerScale = Vector3.one * step;            // we scale the cubes accordingly so the whole trace covers the segment of 0 to 1
@@ -49,7 +49,7 @@ public class Trace : MonoBehaviour {
         step = 1f / trace_resolution;
         markerScale = Vector3.one * step;
 
-        for (int i = 0; i < getData.cSize; i++)      // loop places n = trace_length markerPrefabs and creates a straight line by moving each successive Object one bit further to the right
+        for (int i = 0; i < getData.setSize; i++)      // loop places n = trace_length markerPrefabs and creates a straight line by moving each successive Object one bit further to the right
         {
             markerPosition.x = getData.xValues[i];
             markerPosition.y = getData.yValues[i];

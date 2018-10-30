@@ -10,7 +10,7 @@ using System.Text;
 using UnityEngine.Networking;
 
 public class DrawLine : MonoBehaviour {
-    public GameObject scriptObject; MyServer getData;
+    public GameObject scriptObject; TestServer getData;
 
     private LineRenderer lineRenderer;
     private float counter;
@@ -25,15 +25,15 @@ public class DrawLine : MonoBehaviour {
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.SetPosition(0, new Vector3(0.0f, 0.0f, 0.0f));
         lineRenderer.SetPosition(1, new Vector3(0.0f, 0.0f, 0.0f));
-        //lineRenderer.SetWidth(.45f, .45f);
+        lineRenderer.SetWidth(.15f, .15f);
         //dist = Vector3.Distance(origin.position, destination.position);        
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
-        getData = scriptObject.GetComponent<MyServer>();
-        lineRenderer.positionCount = getData.cSize;
+        getData = scriptObject.GetComponent<TestServer>();
+        lineRenderer.positionCount = getData.setSize;
 
         for (int i=0 ; i < lineRenderer.positionCount ; i++)
         {

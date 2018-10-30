@@ -18,10 +18,8 @@ public class MyServer : MonoBehaviour {
     NetworkStream stream;
     StreamReader reader;
     
-    int socketPort = 8888;
-    const int READ_BUFFER_SIZE = 1024;
-    public byte[] data = new byte[READ_BUFFER_SIZE];
-    String strBytesRead;
+    int socketPort = 8888;  
+    
     String message;
     Int32 label;
 
@@ -60,10 +58,10 @@ public class MyServer : MonoBehaviour {
             message = reader.ReadToEnd();
             //Debug.Log(message);
 
-            data = System.Text.Encoding.ASCII.GetBytes(message);
+            //data = System.Text.Encoding.ASCII.GetBytes(message);
 
-            label = Convert.ToInt32(data[0]);
-            cSize = Convert.ToInt32(data[1]);
+            //label = Convert.ToInt32(data[0]);
+            //cSize = Convert.ToInt32(data[1]);
 
             xValues = new float[cSize];
             yValues = new float[cSize];
@@ -77,7 +75,7 @@ public class MyServer : MonoBehaviour {
                     
                     for (int i = 0; i < cSize; i++)
                     {
-                        xValues[i] = Convert.ToSingle(data[i + 2]);                       
+                        xValues[i] = Convert.ToSingle(message[i + 2]);                       
                     }                      
                     break;
                 case 123:
@@ -86,7 +84,7 @@ public class MyServer : MonoBehaviour {
 
                     for (int i = 0; i < cSize; i++)
                     {
-                        yValues[i] = Convert.ToSingle(data[i + 2]);
+                        yValues[i] = Convert.ToSingle(message[i + 2]);
                     }
                     break;
                 case 124:
@@ -95,7 +93,7 @@ public class MyServer : MonoBehaviour {
 
                     for (int i = 0; i < cSize; i++)
                     {
-                        zValues[i] = Convert.ToSingle(data[i + 2]); ;
+                        zValues[i] = Convert.ToSingle(message[i + 2]); ;
                     }
                     break;
 

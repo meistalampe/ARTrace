@@ -19,8 +19,8 @@ public class TestServer : MonoBehaviour
     StreamReader reader;
 
     int socketPort = 8888;
-    const int READ_BUFFER_SIZE = 1024;
-    public byte[] data = new byte[READ_BUFFER_SIZE];
+    public int setSize;
+    const int SET_SIZE = 101;
     public String[] splitData;
     public String[] xStrings;
     public String[] yStrings;
@@ -29,17 +29,26 @@ public class TestServer : MonoBehaviour
     String message;
     String label;
 
-    public int setSize;
     public float[] xValues;
     public float[] yValues;
     public float[] zValues;
 
+    private void Awake()
+    {
+        splitData = new String[SET_SIZE];
+        xStrings = new String[SET_SIZE];
+        yStrings = new String[SET_SIZE];
+        zStrings = new String[SET_SIZE];
+
+        xValues = new float[SET_SIZE];
+        yValues = new float[SET_SIZE];
+        zValues = new float[SET_SIZE];
+    }
     void Start()
     {
         listener = new TcpListener(socketPort);
         listener.Start();
         print("Unity is listening. Port: " + socketPort);
-
     }
 
     // Update is called once per frame
@@ -69,43 +78,39 @@ public class TestServer : MonoBehaviour
             float p = Convert.ToSingle(splitData[1]);
             setSize = Convert.ToInt32(p);
 
-            xValues = new float[setSize];
-            yValues = new float[setSize];
-            zValues = new float[setSize];
-
-            xStrings = new String[setSize];
-            yStrings = new String[setSize];
-            zStrings = new String[setSize];
-
-            switch (splitData[0])
+            if(setSize <= SET_SIZE)
             {
-                case "xData":
-                    for (int i = 0; i < setSize; i++)
-                    {
-                        xStrings = splitData;
-                        xStrings[i+2] = xStrings[i+2] + "00";
-                        xValues[i] = Convert.ToSingle(xStrings[i + 2]);
-                    }
-                    break;
+                switch (splitData[0])
+                {
+                    case "xData":
+                        for (int i = 0; i < setSize; i++)
+                        {
+                            xStrings = message.Split('|');
+                            //xStrings[i + 2] = xStrings[i + 2] + "00";
+                            xValues[i] = Convert.ToSingle(xStrings[i + 2]);
+                        }
+                        break;
 
-                case "yData":
-                    for (int i = 0; i < setSize; i++)
-                    {
-                        zStrings = splitData;
-                        zStrings[i + 2] = zStrings[i + 2] + "00";
-                        zValues[i] = Convert.ToSingle(zStrings[i + 2]);
-                    }
-                    break;
+                    case "yData":
+                        for (int i = 0; i < setSize; i++)
+                        {
+                            zStrings = message.Split('|');
+                            //zStrings[i + 2] = zStrings[i + 2] + "00";
+                            zValues[i] = Convert.ToSingle(zStrings[i + 2]);
+                        }
+                        break;
 
-                case "zData":
-                    for (int i = 0; i < setSize; i++)
-                    {
-                        yStrings = splitData;
-                        yStrings[i + 2] = yStrings[i + 2] + "00";
-                        yValues[i] = Convert.ToSingle(yStrings[i + 2]);
-                    }
-                    break;
+                    case "zData":
+                        for (int i = 0; i < setSize; i++)
+                        {
+                            yStrings = message.Split('|');
+                            //yStrings[i + 2] = yStrings[i + 2] + "00";
+                            yValues[i] = Convert.ToSingle(yStrings[i + 2]);
+                        }
+                        break;
+                }
             }
+            
                 
             //data = System.Text.Encoding.ASCII.GetBytes(splitData[5]);
             //Debug.Log(splitData[5]);

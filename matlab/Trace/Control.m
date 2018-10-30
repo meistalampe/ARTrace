@@ -63,7 +63,7 @@ x_data = [tSize x_trace];
 x_data_str = 'xData|';
 sepSign = '|';
 
-for i= 1:tSize
+for i= 1:tSize+1
 str = num2str(x_data(i));
 % str = num2str(x_data(i),formatSpec);
 x_data_str = strcat(x_data_str,str);
@@ -79,7 +79,7 @@ y_data = [tSize y_trace];
 y_data_str = 'yData|';
 sepSign = '|';
 
-for i= 1:tSize
+for i= 1:tSize+1
 str = num2str(y_data(i));
 y_data_str = strcat(y_data_str,str);
 y_data_str = strcat(y_data_str,sepSign);
@@ -94,7 +94,7 @@ z_data = [tSize z_trace];
 z_data_str = 'zData|';
 sepSign = '|';
 
-for i= 1:tSize
+for i= 1:tSize+1
 str = num2str(z_data(i),formatSpec);
 z_data_str = strcat(z_data_str,str);
 z_data_str = strcat(z_data_str,sepSign);
