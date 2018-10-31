@@ -6,16 +6,17 @@
 % description:  program allows value changes of key variables to control
 %               vr and sends data to unity
 
-%% Connection
+%% Init
 clc;
 clear;
 
+%% Connection
 % create tcp object, set Port,assign Networkrole Client 
 % use this when on the same pc
 tcpipClient = tcpip('127.0.0.1',8888,'NetworkRole','Client');
 % use this in a network
 %tcpipClient = tcpip('192.168.0.106',7000,'NetworkRole','Client');
-set(tcpipClient,'Timeout',30);
+set(tcpipClient,'Timeout',10);
 
 %% Input
 
@@ -46,62 +47,95 @@ pos_target = inp_pos;
 % pos_target = [3 2 1];
 
 % define start position coordinates
-pos_start = [0 0 0]; % will be automatic input from robot in the future
+pos_start = [1 1 1]; % will be automatic input from robot in the future
  
-% define reference point coordinates
-pos_ref = [1 1 1]; % will be calculated according to start and goal position and ideally live on the unit circle
- 
+% check for one dimensional movement
+x_check = isequal(pos_start(1),pos_target(1));
+y_check = isequal(pos_start(2),pos_target(2));
+z_check = isequal(pos_start(3),pos_target(3));
+all_check = [x_check y_check z_check];
+
+c(all_check == 1) = 1;
+cc = sum(c);
+% assign reference point according to movement type
+if (cc < 2)
+    % define reference point coordinates
+    [ref_point,ref_point_alt] = findRefPoint(pos_start,pos_target,1);
+    pos_ref = ref_point;
+    [x_trace,y_trace,z_trace,points,tSize] = calcTrace(pos_start,pos_target,pos_ref);
+else 
+    
+    x_trace = [pos_start(1) pos_target(1)];
+    y_trace = [pos_start(2) pos_target(2)];
+    z_trace = [pos_start(3) pos_target(3)];
+    tSize = 2;
+    
+    % plot trace    
+    figure(100);
+    hold on;
+    plot3(x_trace,y_trace,z_trace)
+    title('Trace : quadratic beziér')
+    xlabel('x-axis');
+    ylabel('y-axis');
+    zlabel('z-axis');
+    hold off;
+
+end
 % calculate an plot trace
-[x_trace,y_trace,z_trace,points,tSize] = calcTrace(pos_start,pos_target,pos_ref);
- 
+
+fprintf('Process successful.\n');
 %% Trace Transmission
 % transmit trace to Unity
-% x = 122 ,y = 123 , z=124
-formatSpec = '%4.2f';
-% prepare x coordinates
-x_data = [tSize x_trace];
-x_data_str = 'xData|';
-sepSign = '|';
+fprintf('Starting data transmission...\n');
+transmission(x_trace,tSize,'x',tcpipClient)
+transmission(y_trace,tSize,'y',tcpipClient)
+transmission(z_trace,tSize,'z',tcpipClient)
+fprintf('Process successful.\n');
 
-for i= 1:tSize+1
-str = num2str(x_data(i));
-% str = num2str(x_data(i),formatSpec);
-x_data_str = strcat(x_data_str,str);
-x_data_str = strcat(x_data_str,sepSign);
-end
-
-fopen(tcpipClient);
-fwrite(tcpipClient,x_data_str);
-fclose(tcpipClient); 
-
-% prepare y coordinates
-y_data = [tSize y_trace];
-y_data_str = 'yData|';
-sepSign = '|';
-
-for i= 1:tSize+1
-str = num2str(y_data(i));
-y_data_str = strcat(y_data_str,str);
-y_data_str = strcat(y_data_str,sepSign);
-end
-
-fopen(tcpipClient);
-fwrite(tcpipClient,y_data_str);
-fclose(tcpipClient); 
-
-% prepare z coordinates
-z_data = [tSize z_trace];
-z_data_str = 'zData|';
-sepSign = '|';
-
-for i= 1:tSize+1
-str = num2str(z_data(i),formatSpec);
-z_data_str = strcat(z_data_str,str);
-z_data_str = strcat(z_data_str,sepSign);
-end
-
-fopen(tcpipClient);
-fwrite(tcpipClient,z_data_str);
-fclose(tcpipClient); 
-
- 
+% % prepare x coordinates
+% x_data = [tSize x_trace];
+% x_data_str = 'xData|';
+% sepSign = '|';
+% 
+% for i= 1:tSize+1
+% str = num2str(x_data(i));
+% % str = num2str(x_data(i),formatSpec);
+% x_data_str = strcat(x_data_str,str);
+% x_data_str = strcat(x_data_str,sepSign);
+% end
+% 
+% fopen(tcpipClient);
+% fwrite(tcpipClient,x_data_str);
+% fclose(tcpipClient); 
+% 
+% % prepare y coordinates
+% y_data = [tSize y_trace];
+% y_data_str = 'yData|';
+% sepSign = '|';
+% 
+% for i= 1:tSize+1
+% str = num2str(y_data(i));
+% y_data_str = strcat(y_data_str,str);
+% y_data_str = strcat(y_data_str,sepSign);
+% end
+% 
+% fopen(tcpipClient);
+% fwrite(tcpipClient,y_data_str);
+% fclose(tcpipClient); 
+% 
+% % prepare z coordinates
+% z_data = [tSize z_trace];
+% z_data_str = 'zData|';
+% sepSign = '|';
+% 
+% for i= 1:tSize+1
+% str = num2str(z_data(i),formatSpec);
+% z_data_str = strcat(z_data_str,str);
+% z_data_str = strcat(z_data_str,sepSign);
+% end
+% 
+% fopen(tcpipClient);
+% fwrite(tcpipClient,z_data_str);
+% fclose(tcpipClient); 
+% 
+%  

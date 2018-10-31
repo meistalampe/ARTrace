@@ -1,7 +1,9 @@
-function[kpv] = findRefPoint(start_point,end_point)
+function[ref_point, mid_point] = findRefPoint(start_point,end_point,dist_factor)
 
-% clc;
-% clear all;
+%% Note
+% start_point can not be [0 0 0] !!!
+
+%% Work
 
 % assign points
 p1 = start_point;
@@ -15,18 +17,20 @@ sub = p2-p1;
 dist = sqrt(sub(1).^2 + sub(2).^2 + sub(3).^2);
 % find center of points
 mid = sub ./2 + p1;
+mid_point = mid;
 % find normal vector
 kp = cross(p1,p2);
 % calculate the norm
 kpn = kp/norm(kp);
 
 % create reference point
-kpv = mid + 2*kpn;
+kpv = mid + dist_factor*kpn;
+ref_point = kpv;
 % build line from mid to ref 
 dv = [mid(1) kpv(1);mid(2) kpv(2);mid(3) kpv(3)];
 %% plot
 
-figure(1)
+figure(100)
 hold on;
 plot3(x,y,z);
 plot3(mid(1),mid(2),mid(3),'ro');

@@ -18,11 +18,11 @@ pq_ref = pos_r;
 
 % coordinate definition
 % x coordinate
-xq = pq_start(1)*bq0 + pq_target(1)*bq1 + pq_ref(1)*bq2;
+xq = pq_start(1)*bq0 + pq_ref(1)*bq1 + pq_target(1)*bq2;
 % y coordinate
-yq = pq_start(2)*bq0 + pq_target(2)*bq1 + pq_ref(2)*bq2;
+yq = pq_start(2)*bq0 + pq_ref(2)*bq1 + pq_target(2)*bq2;
 % z coordinate
-zq = pq_start(3)*bq0 + pq_target(3)*bq1 + pq_ref(3)*bq2;
+zq = pq_start(3)*bq0 + pq_ref(3)*bq1 + pq_target(3)*bq2;
 
 % trace defintion
 % Trace = [xq(t),yq(t),zq(t)]
@@ -66,7 +66,7 @@ pq_control = [pq_start ; pq_target ; pq_ref];
 sumq = bq0 + bq1 + bq2;
 
 % basic functions
-figure(1);
+figure;
 hold on;
 title('quadratic beziér');
 plot(t,bq0);
@@ -76,7 +76,7 @@ plot(t,sumq);
 legend('bq0','bq1','bq2','sum');
 hold off;
 % trace
-figure(2);
+figure(100);
 hold on;
 plot3(xq,yq,zq);
 plot3(pq_control(:,1),pq_control(:,2),pq_control(:,3),'LineStyle','none','Marker','o');
