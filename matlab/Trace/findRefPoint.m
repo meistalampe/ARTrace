@@ -1,4 +1,4 @@
-function[ref_point, mid_point] = findRefPoint(start_point,end_point,dist_factor)
+function[ref_point, mid_point] = findRefPoint(start_point,end_point)
 
 %% Note
 % start_point can not be [0 0 0] !!!
@@ -22,6 +22,14 @@ mid_point = mid;
 kp = cross(p1,p2);
 % calculate the norm
 kpn = kp/norm(kp);
+
+if dist >= 0 && dist <= 5
+    dist_factor = 1;
+elseif dist > 5 && dist <= 15
+    dist_factor = 2;
+else
+    dist_factor = 3;
+end
 
 % create reference point
 kpv = mid + dist_factor*kpn;

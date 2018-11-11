@@ -9,7 +9,7 @@
 %% Init
 clc;
 clear;
-
+close all;
 %% Connection
 % create tcp object, set Port,assign Networkrole Client 
 % use this when on the same pc
@@ -60,15 +60,26 @@ cc = sum(c);
 % assign reference point according to movement type
 if (cc < 2)
     % define reference point coordinates
-    [ref_point,ref_point_alt] = findRefPoint(pos_start,pos_target,1);
+    [ref_point,ref_point_alt] = findRefPoint(pos_start,pos_target);
     pos_ref = ref_point;
     [x_trace,y_trace,z_trace,points,tSize] = calcTrace(pos_start,pos_target,pos_ref);
+    fprintf('Process successful.\n');
+    
+    t_type = 1;
+    % transmit trace to Unity
+    fprintf('Starting data transmission...\n');
+    x_data_str = transmission(x_trace,tSize,'x',tcpipClient,t_type);
+    y_data_str = transmission(y_trace,tSize,'y',tcpipClient,t_type);
+    z_data_str = transmission(z_trace,tSize,'z',tcpipClient,t_type);
+    fprintf('Process successful.\n');
+    
 else 
     
     x_trace = [pos_start(1) pos_target(1)];
     y_trace = [pos_start(2) pos_target(2)];
     z_trace = [pos_start(3) pos_target(3)];
     tSize = 2;
+    fprintf('Process successful.\n');
     
     % plot trace    
     figure(100);
@@ -79,18 +90,20 @@ else
     ylabel('y-axis');
     zlabel('z-axis');
     hold off;
-
+    
+    t_type = 2;
+    % transmit trace to Unity
+    fprintf('Starting data transmission...\n');
+    x_data_str = transmission(x_trace,tSize,'x',tcpipClient,t_type);
+    y_data_str = transmission(y_trace,tSize,'y',tcpipClient,t_type);
+    z_data_str = transmission(z_trace,tSize,'z',tcpipClient,t_type);
+    fprintf('Process successful.\n');
 end
 % calculate an plot trace
+% 
 
-fprintf('Process successful.\n');
 %% Trace Transmission
-% transmit trace to Unity
-fprintf('Starting data transmission...\n');
-transmission(x_trace,tSize,'x',tcpipClient)
-transmission(y_trace,tSize,'y',tcpipClient)
-transmission(z_trace,tSize,'z',tcpipClient)
-fprintf('Process successful.\n');
+
 
 % % prepare x coordinates
 % x_data = [tSize x_trace];
